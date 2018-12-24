@@ -43,7 +43,6 @@ def get_features(X):
     X_features = sparse.hstack([X_text_features, X_len_features])
     return X_features
 
-# featurizer = joblib.load('featurizer_joblib_2018_December_24')
 
 model = joblib.load('lr_model_joblib_2018_December_24')
 
@@ -53,11 +52,8 @@ def predict():
         try:
             data = request.get_json()
             text = str(data['text'])
-
             X_text = pd.DataFrame({'sms': [text], 'len': [len(text)]})
-            prediction = model.predict(get_features(X_text))[0]
-            print("HERE IS PREDICTION: {}".format(prediction))
-            
+            prediction = model.predict(get_features(X_text))[0]            
             spam_proba = model.predict_proba(get_features(X_text))[0][1] # check this
             
         except ValueError:
