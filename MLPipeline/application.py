@@ -11,7 +11,7 @@
             - Retrain API at localhost:5050/retrain/
 
         Predict API:
-            - accepts POST request at /predict
+            - accepts POST request at /predict/ e.g. requests.post(url, json=payload)
             - expects a payload: {'text': "This is a sample message. Please predict if I am spam or ham."}
             - returns a response: {'prediction': 'ham', 'spam_score': 0.123}
 
@@ -28,24 +28,23 @@ import pandas as pd
 
 app = Flask(__name__)
 
-
 @app.route("/")
 def hello():
     return "Welcome to the spam-filter web service!"
 
-vectorizer = joblib.load('vectorizer_joblib_2018_December_24')
-
+"""
+    This function will be used when we combine different features
+    A sample input: X = pd.DataFrame({'sms': [text], 'len': [len(text)]})
+    A sample usage: prediction = model.predict(get_features(X_text))[0]
+"""
 from scipy import sparse
 def get_features(X):
     X_text_features = vectorizer.transform(list(X['sms']))
     X_len_features = sparse.csr_matrix(X['len']).T
     X_features = sparse.hstack([X_text_features, X_len_features])
-    return X_features
+    return X_
 
-
-model = joblib.load('lr_model_joblib_2018_December_24')
-
-pipeline_model = joblib.load("pipeline.joblib")
+model = joblib.load("../Models/pipeline.joblib")
 
 @app.route("/predict/", methods=['POST'])
 def predict():
@@ -54,18 +53,14 @@ def predict():
             data = request.get_json()
             print(data)
             text = str(data['text'])
-            X_text = pd.DataFrame({'sms': [text], 'len': [len(text)]})
-            #prediction = model.predict(get_features(X_text))[0]
-            prediction = pipeline_model.predict([text])[0]
-            print(prediction)
-            spam_proba = model.predict_proba(get_features(X_text))[0][1] # check this
-            
+        
+            prediction = model.predict([text])[0]
+            spam_proba = model.predict_proba([text])[0][1] 
             
         except ValueError:
             return jsonify("Please enter a valid input.")
 
         return jsonify({'prediction': prediction, 'spam_proba': spam_proba})
     
-
 if __name__ == '__main__':
     app.run(debug=True)
