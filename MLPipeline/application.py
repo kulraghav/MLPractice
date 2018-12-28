@@ -19,8 +19,7 @@
             - accepts GET request at /retrain
             - retrains the model and saves it in a file
                 - filename is appended with current date, e.g.,  model_joblib_2018_December_24
-            - returns a response: {'status': 1, 'filename': 'model_joblib_2018_December_24', 'score': 0.9345}
-            
+            - returns a response: {'status': 1, 'filename': 'model_joblib_2018_December_24', 'score': 0.9345}            
 """
 
 from flask import Flask, request, jsonify
@@ -46,15 +45,21 @@ def get_features(X):
 
 model = joblib.load('lr_model_joblib_2018_December_24')
 
-@app.route("/predict", methods=['POST'])
+pipeline_model = joblib.load("pipeline.joblib")
+
+@app.route("/predict/", methods=['POST'])
 def predict():
     if request.method == 'POST':
         try:
             data = request.get_json()
+            print(data)
             text = str(data['text'])
             X_text = pd.DataFrame({'sms': [text], 'len': [len(text)]})
-            prediction = model.predict(get_features(X_text))[0]            
+            #prediction = model.predict(get_features(X_text))[0]
+            prediction = pipeline_model.predict([text])[0]
+            print(prediction)
             spam_proba = model.predict_proba(get_features(X_text))[0][1] # check this
+            
             
         except ValueError:
             return jsonify("Please enter a valid input.")
