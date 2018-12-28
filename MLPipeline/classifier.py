@@ -24,7 +24,8 @@ def train(X, y):
     print("The cross validation scores are: {}".format(cross_val_score(model, X=X_train, y=y_train, cv=5)))
 
     """
-        When we want to put in production, shall we train it on X, y and then return ?
+        When we want to put in production, 
+        shall we train it on X, y and then return ?
     """
     model.fit(X_train, y_train)
     return model
