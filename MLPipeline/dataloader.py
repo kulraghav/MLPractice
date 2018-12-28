@@ -8,11 +8,11 @@
 
 import pandas as pd
 
-spam_data_path = '../Data/spam.csv'
+data_path = '../Data/spam.csv'
 
 import chardet
 def get_encoding(data_path):
-    with open(spam_data_path, 'rb') as f:
+    with open(data_path, 'rb') as f:
         result = chardet.detect(f.read())
         return result['encoding']
 
