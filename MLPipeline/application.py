@@ -3,17 +3,18 @@
     A flask-API for spam filter
 
     Usage:
-
         $python application.py
          
-        The application will run on localhost:5050/ and serves
-            - Predict API at localhost:5050/predict/
-            - Retrain API at localhost:5050/retrain/
+        The application will run on localhost:5050/ and serves two API endpoints
+            - Predict API: localhost:5050/predict
+            - Retrain API: localhost:5050/retrain
 
         Predict API:
-            - accepts POST request at /predict/ e.g. requests.post(url, json=payload)
-            - expects a payload: {'text': "This is a sample message. Please predict if I am spam or ham."}
-            - returns a response: {'prediction': 'ham', 'spam_score': 0.123}
+            >>> import requests
+            >>> payload: {'text': "This is a sample message. Please predict if I am spam or ham."}
+            >>> response =  requests.post(url='localhost:5050/predict', json=payload)
+            >>> response.json()
+            >>> {'prediction': 'ham', 'spam_score': 0.123}
 
         Retrain API:
             - accepts GET request at /retrain
@@ -29,36 +30,46 @@ import pandas as pd
 app = Flask(__name__)
 
 @app.route("/")
-def hello():
+def welcome_message():
     return "Welcome to the spam-filter web service!"
 
-"""
-    This function will be used when we combine different features
-    A sample input: X = pd.DataFrame({'sms': [text], 'len': [len(text)]})
-    A sample usage: prediction = model.predict(get_features(X_text))[0]
-"""
-from scipy import sparse
-def get_features(X):
-    X_text_features = vectorizer.transform(list(X['sms']))
-    X_len_features = sparse.csr_matrix(X['len']).T
-    X_features = sparse.hstack([X_text_features, X_len_features])
-    return X_
+import os
+def get_latest_model_path(model_dir):
+    filenames = []
+    for root, dirs, files in os.walk(model_dir):  
+        for filename in files:
+            filenames.append(filename)
+            
+    filenames.sort(key=lambda x: x.split('joblib')[-1], reverse=True)
 
-model = joblib.load("../Models/pipeline.joblib")
+    if not filenames:
+        raise Exception("Model not found")
+    
+    return model_dir+filenames[0]
+    
 
-@app.route("/predict/", methods=['POST'])
+def load_model(path_to_model_dir="../Models/Spam/", path_to_model=""):
+    if not path_to_model:
+        path = get_latest_model_path(path_to_model_dir)
+    else:
+        path = path_to_model
+    model = joblib.load(path)
+    return model
+    
+model = load_model()    
+
+@app.route("/predict", methods=['POST'], strict_slashes=False)
 def predict():
     if request.method == 'POST':
         try:
             data = request.get_json()
-            print(data)
             text = str(data['text'])
         
             prediction = model.predict([text])[0]
             spam_proba = model.predict_proba([text])[0][1] 
             
         except ValueError:
-            return jsonify("Please enter a valid input.")
+            return jsonify("Please enter a valid input: {'text': 'Your text goes here'}")
 
         return jsonify({'prediction': prediction, 'spam_proba': spam_proba})
     
