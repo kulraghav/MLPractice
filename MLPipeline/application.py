@@ -17,10 +17,11 @@
             >>> {'prediction': 'ham', 'spam_score': 0.123}
 
         Retrain API:
-            - accepts GET request at /retrain
-            - retrains the model and saves it in a file
-                - filename is appended with current date, e.g.,  model_joblib_2018_December_24
-            - returns a response: {'status': 1, 'filename': 'model_joblib_2018_December_24', 'score': 0.9345}            
+            >>> import requests
+            >>> url = 'localhost:5050/retrain'
+            >>> response = requests.get(url)
+            >>> response.json()
+            >>> {'model_path': 'model_joblib_2018_December_24', 'average_cv_score': 0.9345}            
 """
 
 from flask import Flask, request, jsonify
