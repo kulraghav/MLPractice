@@ -1,12 +1,9 @@
 import os
 from sklearn.externals import joblib
 
-model_dir = "../Models/Spam/"
-
+model_dir = "./Models/"
 
 def get_latest_model_path(model_dir):
-    return "model.joblib_2018_December_29" # temporary fix to check docker deployment
-
     filenames = []
     for root, dirs, files in os.walk(model_dir):  
         for filename in files:

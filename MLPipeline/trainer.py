@@ -11,6 +11,7 @@ from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import train_test_split
 from datetime import date
 
+model_dir = "./Models/"
 
 def train(X, y, save=True):
     X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=42)
@@ -34,7 +35,7 @@ def train(X, y, save=True):
     model_path = "model_path_not_specified"
     if save == True:
         version = date.today().strftime("%Y_%B_%d")
-        model_path = '../Models/Spam/model.joblib_{}'.format(version)
+        model_path = model_dir+'model.joblib_{}'.format(version)
         joblib.dump(pipeline, model_path)
 
     result = {'model_path': model_path, "average_cv_score": cv_scores.mean()}

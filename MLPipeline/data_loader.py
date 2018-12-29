@@ -8,7 +8,7 @@
 
 import pandas as pd
 
-data_path = '../Data/spam.csv'
+data_path = './Data/spam.csv'
 
 import chardet
 def get_encoding(data_path):
