@@ -35,6 +35,17 @@ def sim_distance(prefs, person1, person2):
     else:
         return 1/(1+sum_of_squares)
 
+def sim_jaccard(prefs, p1, p2):
+    numerator = 0
+    difference = 0
+    for movie in prefs[p1]:
+        if movie in prefs[p2]:
+            numerator = numerator + 1
+        else:
+            difference = difference + 1
+    denominator = len(prefs[p1].keys()) + difference        
+    return numerator/denominator 
+
 def sim_pearson(prefs, p1, p2):
     sum1 = sum(prefs[p1].values())
     sum2 = sum(prefs[p2].values())
@@ -74,7 +85,7 @@ def topMatches(prefs, person, n=5, similarity=sim_distance):
 
 # Gets recommendations for a person by using a weighted average
 # of every other user's rankings
-def getRecommendations(prefs,person,similarity=sim_pearson):
+def getRecommendations(prefs,person,similarity=sim_jaccard):
     totals={}
     simSums={}
     for other in prefs:
