@@ -3,7 +3,7 @@
     This module contains the functions that help in
        1. loading the raw data
        2. cleaning the raw data
-       3. transforming it to a form usable by ML pipeline        
+       3. transforming it to a form usable by the ML model        
 """
 
 import pandas as pd
