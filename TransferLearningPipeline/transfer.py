@@ -12,7 +12,7 @@ from keras.applications.resnet50 import ResNet50, preprocess_input
 
 resnet_model = ResNet50(weights='imagenet', include_top=False, input_shape=(200, 200, 3))
 
-def get_vector(image_path):
+def get_vector(image_path, model=resnet_model):
     image = Image.open(image_path)
 
     resized_image = image.resize((200, 200), Image.NEAREST)
