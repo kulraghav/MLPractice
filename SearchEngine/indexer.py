@@ -4,6 +4,8 @@
 """
 
 import sqlite3
+import requests
+from bs4 import BeautifulSoup
 
 con = sqlite3.connect('test.db')
 
@@ -23,8 +25,22 @@ def create_tables():
    con.execute('create index urlfromidx on link(fromid)')
    dbcommit( )            
 
-def get_text(url):
-   pass
+def get_text(url, soup=None):
+   if not soup:
+       page = requests.get(url)
+       soup = BeautifulSoup(page.text, "html.parser")
+   
+   v =soup.string
+   if v ==None:
+       c=soup.contents
+       
+       resulttext=''
+       for t in c:
+           subtext= get_text(url, soup=t)
+           resulttext+=subtext+'\n'
+       return resulttext
+   else:
+       return v.strip( )
 
 def get_words(text):
    pass
@@ -35,4 +51,4 @@ def is_indexed(url):
 def create_index(url):
    pass
 
-conn.close()
+con.close()
