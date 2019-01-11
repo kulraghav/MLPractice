@@ -6,6 +6,7 @@
 import sqlite3
 import requests
 from bs4 import BeautifulSoup
+import re
 
 con = sqlite3.connect('test.db')
 
@@ -43,7 +44,8 @@ def get_text(url, soup=None):
        return v.strip( )
 
 def get_words(text):
-   pass
+   splitter=re.compile('\\W*')
+   return [s.lower( ) for s in splitter.split(text) if s!='']
 
 def is_indexed(url):
    pass
