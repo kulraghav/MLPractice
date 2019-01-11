@@ -9,16 +9,19 @@ conn = sqlite3.connect('test.db')
 
 print("Opened database successfully.")
 
-conn.execute("create table user (id int primary key not null, name text not null, age int not null);")
+def create_tables():
+   pass
 
-print("Table created successfully")
+def get_text(url):
+   pass
 
-conn.execute("insert into user (id, name, age) values(111, 'OneOne', 11);")
+def get_words(text):
+   pass
 
-cursor = conn.execute("select * from user where id=111;")
+def is_indexed(url):
+   pass
 
-for row in cursor:
-   print("ID = {}".format(row[0]))
-   print("NAME = {}".format(row[1]))
-   
+def create_index(url):
+   pass
+
 conn.close()
