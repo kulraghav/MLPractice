@@ -12,6 +12,8 @@ con = sqlite3.connect('test.db')
 
 print("Opened database successfully.")
 
+ignorewords = []
+
 def create_tables():
    con.execute('create table urllist(url)')
    con.execute('create table wordlist(word)')
@@ -55,8 +57,34 @@ def is_indexed(url):
        if v!=None: return True
    return False
    
-
 def create_index(url):
-   pass
+   if is_indexed(url):
+      return
 
-# con.close()
+   print("Indexing {}".format(url))
+
+   text = get_text(url)
+   words = get_words(text)
+
+   urlid = get_entry_id('urllist', 'url', url)
+
+   # Link each word to this url
+   for i in range(len(words)):
+       word=words[i]
+       if word in ignorewords: continue
+       wordid= get_entry_id('wordlist','word',word)
+       con.execute("insert into wordlocation(urlid,wordid,location) values (%d,%d,%d)" % (urlid,wordid,i))
+
+   return
+
+def get_entry_id(table,field,value,createnew=True):
+    cur=con.execute("select rowid from %s where %s='%s'" % (table,field,value))
+    res=cur.fetchone( )
+    if res==None:
+        cur = con.execute("insert into %s (%s) values ('%s')" % (table,field,value))
+        return cur.lastrowid
+    else:
+        return res[0]
+   
+
+#con.close()
