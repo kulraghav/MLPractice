@@ -19,12 +19,12 @@ def create_tables():
    con.execute('create table link(fromid integer,toid integer)')
    con.execute('create table linkwords(wordid,linkid)')
 
-   con.execute('create index on wordlist(word)')
-   con.execute('create index on urllist(url)')
-   con.execute('create index on wordlocation(wordid)')
+   con.execute('create index wordidx on wordlist(word)')
+   con.execute('create index urlidx on urllist(url)')
+   con.execute('create index wordurlidx on wordlocation(wordid)')
    con.execute('create index urltoidx on link(toid)')
    con.execute('create index urlfromidx on link(fromid)')
-   dbcommit( )            
+   con.commit( )            
 
 def get_text(url, soup=None):
    if not soup:
@@ -48,9 +48,15 @@ def get_words(text):
    return [s.lower( ) for s in splitter.split(text) if s!='']
 
 def is_indexed(url):
-   pass
+   u = con.execute("select rowid from urllist where url='%s'" % url).fetchone( )
+   if u!=None:
+   # Check if it has actually been crawled
+       v = con.execute('select * from wordlocation where urlid=%d' % u[0]).fetchone( )
+       if v!=None: return True
+   return False
+   
 
 def create_index(url):
    pass
 
-con.close()
+# con.close()
