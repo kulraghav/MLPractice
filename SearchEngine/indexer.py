@@ -1,6 +1,6 @@
 
 """
-    index a link
+    index a url
 """
 
 import sqlite3
@@ -62,10 +62,8 @@ def create_index(url):
       return
 
    print("Indexing {}".format(url))
-
    text = get_text(url)
    words = get_words(text)
-
    urlid = get_entry_id('urllist', 'url', url)
 
    # Link each word to this url
@@ -74,7 +72,6 @@ def create_index(url):
        if word in ignorewords: continue
        wordid= get_entry_id('wordlist','word',word)
        con.execute("insert into wordlocation(urlid,wordid,location) values (%d,%d,%d)" % (urlid,wordid,i))
-
    return
 
 def get_entry_id(table,field,value,createnew=True):
