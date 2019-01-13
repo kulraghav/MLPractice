@@ -4,6 +4,19 @@ import sqlite3
 dbname = 'test.db'
 con = sqlite3.connect(dbname)
 
+def get_matches_two(query):
+    words = query.split(' ')
+
+    l0 = con.execute("select rowid from wordlist where word='{}'".format(words[0])).fetchone()
+    l1 = con.execute("select rowid from wordlist where word='{}'".format(words[1])).fetchone()
+
+    print(l0, l1)
+    q = "select w0.urlid,w0.location,w1.location from wordlocation w0,wordlocation w1 where w0.urlid=w1.urlid and w0.wordid={} and w1.wordid={}".format(l0, l1)
+
+    cur = con.execute(q)
+
+    return [row for row in cur]
+
 def get_matches(query):
     # Strings to build the query
     fieldlist='w0.urlid'
@@ -13,12 +26,13 @@ def get_matches(query):
 
     # Split the words by spaces
     words=query.split(' ')
+    print(words)
     tablenumber=0
 
     for word in words:
         # Get the word ID
-        wordrow= con.execute(
-        "select rowid from wordlist where word='%s'" % word).fetchone( )
+        wordrow= con.execute("select rowid from wordlist where word='{}'".format(word)).fetchone()
+        print(wordrow)
         if wordrow!=None:
             wordid=wordrow[0]
             wordids.append(wordid)
@@ -26,10 +40,10 @@ def get_matches(query):
                 tablelist+=','
                 clauselist+=' and '
                 clauselist+='w%d.urlid=w%d.urlid and ' % (tablenumber-1,tablenumber)
-                fieldlist+=',w%d.location' % tablenumber
-                tablelist+='wordlocation w%d' % tablenumber
-                clauselist+='w%d.wordid=%d' % (tablenumber,wordid)
-                tablenumber+=1
+            fieldlist+=',w%d.location' % tablenumber
+            tablelist+='wordlocation w%d' % tablenumber
+            clauselist+='w%d.wordid=%d' % (tablenumber,wordid)
+            tablenumber+=1
 
     # Create the query from the separate parts
     fullquery = 'select {} from where {}'.format(fieldlist,tablelist,clauselist)
