@@ -4,18 +4,11 @@ from bs4 import BeautifulSoup
 from indexer import create_index
 
 def is_valid(link):
-    return True
-
-    """
-        is_valid function takes forever for 1000 links
-        Skipping it temporarily
-    """
-
-    try:
-        requests.get(link)
+    if link[:4] == 'http':
         return True
-    except:
+    else:
         return False
+    
     
 def get_valid_links(base_url):
     try:
@@ -32,7 +25,7 @@ def get_valid_links(base_url):
     return valid_links
 
     
-def crawl_and_index(base_urls, depth=2):
+def crawl_and_index(base_urls, con, depth=2):
     indexed_urls = set()
     
     for i in range(depth):
@@ -41,7 +34,7 @@ def crawl_and_index(base_urls, depth=2):
             links = get_valid_links(base_url)
             for link in links:
                 if not link in indexed_urls:
-                    create_index(link)
+                    create_index(link, con)
                     indexed_urls.add(link)
                     
     return indexed_urls

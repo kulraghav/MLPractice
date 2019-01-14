@@ -1,10 +1,13 @@
+"""
+   issue con.execute returns None
+"""
 
-import sqlite3
 
-dbname = 'test.db'
-con = sqlite3.connect(dbname)
+def get_matches_single(query, con):
+    result = con.execute("select rowid from wordlist where word='{}'".format(query)).fetchone()
+    return result
 
-def get_matches_two(query):
+def get_matches_two(query, con):
     words = query.split(' ')
 
     l0 = con.execute("select rowid from wordlist where word='{}'".format(words[0])).fetchone()
@@ -17,7 +20,7 @@ def get_matches_two(query):
 
     return [row for row in cur]
 
-def get_matches(query):
+def get_matches(query, con):
     # Strings to build the query
     fieldlist='w0.urlid'
     tablelist=''
