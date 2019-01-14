@@ -1,7 +1,7 @@
 """
-   issue con.execute returns None
+   issue con.execute returns None when word is out of vocabulary
+   How to handle the out of vocabulary search problem?
 """
-
 
 def get_matches_single(query, con):
     result = con.execute("select rowid from wordlist where word='{}'".format(query)).fetchone()
@@ -13,8 +13,8 @@ def get_matches_two(query, con):
     l0 = con.execute("select rowid from wordlist where word='{}'".format(words[0])).fetchone()
     l1 = con.execute("select rowid from wordlist where word='{}'".format(words[1])).fetchone()
 
-    print(l0, l1)
-    q = "select w0.urlid,w0.location,w1.location from wordlocation w0,wordlocation w1 where w0.urlid=w1.urlid and w0.wordid={} and w1.wordid={}".format(l0, l1)
+    print("l0 = {} and l1 = {}".format(l0, l1))
+    q = "select w0.urlid,w0.location,w1.location from wordlocation w0,wordlocation w1 where w0.urlid=w1.urlid and w0.wordid={} and w1.wordid={}".format(l0[0], l1[0])
 
     cur = con.execute(q)
 
