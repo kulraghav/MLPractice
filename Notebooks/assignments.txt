@@ -1,0 +1,22 @@
+Assignment 1:
+
+Build a spam filter
+
+- train 3 classifiers of your choice on sms spam data
+- for each classifier show precision and recall
+- explain briefly how the classifier works
+
+Assignment 2:
+
+k-means clustering
+
+- choose a dataset other than the mnist
+- apply k-means clustering and evaluate the results
+- visualize the data using t-sne
+
+Assignment 3:
+
+linear regression
+
+- Reproduce the results from Chapter 3 from ISLR on Adverstising data
+to answer which channels can be attributed to sales
