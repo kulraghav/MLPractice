@@ -20,3 +20,27 @@ linear regression
 
 - Reproduce the results from Chapter 3 from ISLR on Adverstising data
 to answer which channels can be attributed to sales
+
+Assignment 4:
+
+recommender systems
+
+movielens data
+- choose and implement a similarity scoring between two users (e.g. pearson)
+- write to function that takes user as input and outputs top 10 movies recommened to him which he has not seen
+
+Assignment 5:
+
+backpropagation algorithm
+
+- write a function to train a logistic regression using SGD
+- write a function to train a depth 3 neural network using backpropagation algorithm
+
+Assignment 6:
+
+transfer learning
+
+- use a pretrained neural network to train "cats" vs "dogs" classification
+on 100 images of cats and 100 images of dogs
+
+you may choose other classification instead of "cats" vs "dogs"
