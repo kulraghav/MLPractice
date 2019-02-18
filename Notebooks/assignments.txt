@@ -26,15 +26,21 @@ Assignment 4:
 recommender systems
 
 movielens data
+https://grouplens.org/datasets/movielens/100k/
 - choose and implement a similarity scoring between two users (e.g. pearson)
-- write to function that takes user as input and outputs top 10 movies recommened to him which he has not seen
+- write to function that takes user as input and outputs 
+  top 10 movies recommened to him which he has not seen
+  - rank the items based on a weighted sum of its rating by other users
+  - weights depend on the similarity of given user with other user
+  - Chapter 2: Page 15 of Programming Collective Intelligence
 
 Assignment 5:
 
 backpropagation algorithm
 
 - write a function to train a logistic regression using SGD
-- write a function to train a depth 3 neural network using backpropagation algorithm
+- write a function to train a depth 3 neural network using backpropagation algorithm (Programming Collective Intelligence: Page 80, 81
+Nielson's Blog Chapter 2: http://neuralnetworksanddeeplearning.com/chap2.html)
 
 Assignment 6:
 
@@ -44,3 +50,4 @@ transfer learning
 on 100 images of cats and 100 images of dogs
 
 you may choose other classification instead of "cats" vs "dogs"
+https://www.learnopencv.com/keras-tutorial-fine-tuning-using-pre-trained-models/
